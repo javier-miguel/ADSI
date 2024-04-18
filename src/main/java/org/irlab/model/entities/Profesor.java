@@ -7,26 +7,35 @@ import jakarta.persistence.Id;
 
 public class Profesor {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "DNI", nullable = false)
+    private String dni;
 
     @Column(name = "nombre", nullable = false)
     private String nombre;
+
+    @Column(name = "apellido1", nullable = false)
+    private String apellido1;
+
+    @Column(name = "apellido2", nullable = false)
+    private String apellido2;
 
     public Profesor(){
 
     }
 
-    public Profesor(String nombre) {
+    public Profesor(String dni, String nombre, String apellido1, String apellido2) {
+        this.dni = dni;
         this.nombre = nombre;
+        this.apellido1 = apellido1;
+        this.apellido2 = apellido2;
     }
 
-    public Long getId() {
-        return id;
+    public String getDni() {
+        return dni;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 
     public String getNombre() {
@@ -35,6 +44,22 @@ public class Profesor {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getApellido1() {
+        return apellido1;
+    }
+
+    public void setApellido1(String apellido1) {
+        this.apellido1 = apellido1;
+    }
+
+    public String getApellido2() {
+        return apellido2;
+    }
+
+    public void setApellido2(String apellido2) {
+        this.apellido2 = apellido2;
     }
 
 }
