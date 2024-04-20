@@ -5,6 +5,10 @@
   <persistence-unit name="example-jpa-app" transaction-type="RESOURCE_LOCAL">
     <class>org.irlab.model.entities.User</class>
     <class>org.irlab.model.entities.Role</class>
+    <class>org.irlab.model.entities.Alumno</class>
+    <class>org.irlab.model.entities.Profesor</class>
+    <class>org.irlab.model.entities.Clase</class>
+    <class>org.irlab.model.entities.Asignatura</class>
     <!-- <exclude-unlisted-classes>false</exclude-unlisted-classes> -->
     <properties>
       <property name="jakarta.persistence.jdbc.driver" value="org.apache.derby.iapi.jdbc.AutoloadedDriver" />

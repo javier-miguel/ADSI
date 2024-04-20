@@ -1,9 +1,8 @@
 package org.irlab.model.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+@Entity
 public class Clase {
 
     @Id
@@ -14,13 +13,13 @@ public class Clase {
     private Long curso;
 
     @Column(name = "grupo", nullable = false)
-    private Long grupo;
+    private String grupo;
 
     public Clase(){
 
     }
 
-    public Clase(Long id, Long curso, Long grupo) {
+    public Clase(Long id, Long curso, String grupo) {
         this.id = id;
         this.curso = curso;
         this.grupo = grupo;
@@ -42,11 +41,11 @@ public class Clase {
         this.curso = curso;
     }
 
-    public Long getGrupo() {
+    public String getGrupo() {
         return grupo;
     }
 
-    public void setGrupo(Long grupo) {
+    public void setGrupo(String grupo) {
         this.grupo = grupo;
     }
 }

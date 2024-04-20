@@ -1,13 +1,10 @@
 package org.irlab.model.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
+import jakarta.persistence.*;
+@Entity
 public class Alumno {
     @Id
-    @Column(name = "DNI", nullable = false)
+    @Column(name = "DNI", unique = true, nullable = false)
     private String dni;
 
     @Column(name = "nombre", nullable = false)
@@ -19,15 +16,20 @@ public class Alumno {
     @Column(name = "apellido2", nullable = false)
     private String apellido2;
 
+    @ManyToOne
+    @JoinColumn(name = "num_clase")
+    private Clase clase;
+
     public Alumno(){
 
     }
 
-    public Alumno(String dni, String nombre, String apellido1, String apellido2) {
+    public Alumno(String dni, String nombre, String apellido1, String apellido2, Clase clase) {
         this.dni = dni;
         this.nombre = nombre;
         this.apellido1 = apellido1;
         this.apellido2 = apellido2;
+        this.clase = clase;
     }
 
     public String getDni() {
@@ -61,5 +63,9 @@ public class Alumno {
     public void setApellido2(String apellido2) {
         this.apellido2 = apellido2;
     }
+
+    public Clase getClase(){ return clase;}
+
+    public void setClase(Clase clase){ this.clase = clase;}
 
 }
