@@ -18,9 +18,14 @@ package org.irlab.model.services;
 
 import javax.annotation.Nonnull;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.irlab.model.entities.Clase;
+import org.irlab.model.exceptions.AlumnoAlreadyExistsException;
 import org.irlab.model.exceptions.RoleNotFoundException;
 import org.irlab.model.exceptions.UserAlreadyExistsException;
 import org.irlab.model.exceptions.UserNotFoundException;
+import org.irlab.model.exceptions.AlumnoNotFoundException;
+import org.irlab.model.exceptions.ClaseNotFoundException;
 
 /**
  * The user service facade
@@ -63,6 +68,12 @@ public interface UserService {
      * @throws RoleNotFoundException      if a role with the given name cannot be
      *                                    foundd
      */
+    void createAlumno(@Nonnull String DNI, @NonNull String name, @Nonnull String apel1, @Nonnull String apel2, long curso, @Nonnull String grupo) 
+                throws AlumnoAlreadyExistsException, ClaseNotFoundException;
+    void updateAlumno(@Nonnull String DNI, long curso, @Nonnull String grupo) 
+                throws AlumnoNotFoundException, ClaseNotFoundException;
     void createUser(@Nonnull String name, @Nonnull String role)
             throws UserAlreadyExistsException, RoleNotFoundException;
+
+
 }

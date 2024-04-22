@@ -27,6 +27,9 @@ import org.irlab.common.AppEntityManagerFactory;
 import org.irlab.model.exceptions.RoleNotFoundException;
 import org.irlab.model.exceptions.UserAlreadyExistsException;
 import org.irlab.model.exceptions.UserNotFoundException;
+import org.irlab.model.exceptions.ClaseNotFoundException;
+import org.irlab.model.exceptions.AlumnoNotFoundException;
+import org.irlab.model.exceptions.AlumnoAlreadyExistsException;
 import org.irlab.model.services.RoleService;
 import org.irlab.model.services.RoleServiceImpl;
 import org.irlab.model.services.UserService;
@@ -37,7 +40,7 @@ import jakarta.persistence.EntityManager;
 public class App {
 
     private enum Command {
-        GREET_USER, CHANGE_GREETING, CREATE_USER, EXIT
+        GREET_USER, CHANGE_GREETING, CREATE_USER, CREATE_ALUMNO, UPDATE_ALUMNO, EXIT
     }
 
     private static final int CORRECT_SHUTDOWN = 50000;
@@ -86,6 +89,10 @@ public class App {
         System.out.println("  1) Greet user");
         System.out.println("  2) Change user greeting");
         System.out.println("  3) Add a new user");
+        System.out.println("  4) Add a new Alumno");
+        System.out.println("  5) Update an Alumno");
+
+
         System.out.println();
         System.out.println("  q) Exit");
         System.out.println();
@@ -104,6 +111,10 @@ public class App {
                     return Command.CHANGE_GREETING;
                 case '3':
                     return Command.CREATE_USER;
+                case '4':
+                    return Command.CREATE_ALUMNO;
+                case '5':
+                    return Command.UPDATE_ALUMNO;
                 case 'q':
                     return Command.EXIT;
                 default:
@@ -168,6 +179,37 @@ public class App {
             System.out.println("User not created: invalid role");
         }
     }
+    private static void createAlumno() {
+        String AlDni = readInput("Alumno's DNI: ", "You must supply an alumno's DNI");
+        String AlName = readInput("Alumno's name: ", "You must supply an alumno's name");
+        String Al1Ap = readInput("Alumno's first surname: ", "You must supply an alumno's first surname");
+        String Al2Ap = readInput("Alumno's second surname: ", "You must supply an alumno's second surname");
+        Long AlYear = Long.parseLong(readInput("Alumno's year: ", "You must supply an alumno's year"));
+        String AlGroup = readInput("Alumno's group: ", "You must supply an alumno's group");
+        try {
+            
+            userService.createAlumno(AlDni,AlName, Al1Ap, Al2Ap, AlYear, AlGroup);
+            System.out.println("User created");
+        } catch (AlumnoAlreadyExistsException e) {
+            System.out.println("User not created: a user with that name already exists.");
+        } catch (ClaseNotFoundException e) {
+            System.out.println("User not created: invalid role");
+        }
+    }
+    private static void updateAlumno() {
+        String AlDni = readInput("Alumno's DNI: ", "You must supply an alumno's DNI");
+        Long AlYear = Long.parseLong(readInput("Alumno's year: ", "You must supply an alumno's year"));
+        String AlGroup = readInput("Alumno's group: ", "You must supply an alumno's group");
+        try {
+            
+            userService.updateAlumno(AlDni, AlYear, AlGroup);
+            System.out.println("User created");
+        } catch (AlumnoNotFoundException e) {
+            System.out.println("User not created: a user with that name already exists.");
+        } catch (ClaseNotFoundException e) {
+            System.out.println("User not created: invalid role");
+        }
+    }
 
     public static void main(String[] args) throws SQLException {
         init();
@@ -180,6 +222,8 @@ public class App {
             case GREET_USER -> greetUser();
             case CHANGE_GREETING -> changeGreeting();
             case CREATE_USER -> createUser();
+            case CREATE_ALUMNO -> createAlumno();
+            case UPDATE_ALUMNO -> updateAlumno();
             case EXIT -> exit = true;
             }
         }

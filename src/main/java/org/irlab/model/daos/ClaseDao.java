@@ -34,4 +34,13 @@ public class ClaseDao {
      public static void update(EntityManager em, Clase clase){
          em.persist(clase);
      }
+     public static Clase findByCursoYClase(EntityManager em, Long curso, String grupo){
+        TypedQuery<Clase> c = em.createQuery("select c from Clase c where c.curso = :curso and c.grupo = :grupo", Clase.class).setParameter("curso",curso).setParameter("grupo", grupo);
+
+        if(c.getSingleResult() == null){
+            return null;
+        }else{
+            return c.getSingleResult();
+        }
+    }
 }

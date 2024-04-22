@@ -22,13 +22,22 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 
 import org.irlab.common.AppEntityManagerFactory;
+import org.irlab.model.daos.AlumnoDao;
 import org.irlab.model.daos.RoleDao;
 import org.irlab.model.daos.UserDao;
+import org.irlab.model.daos.ClaseDao;
 import org.irlab.model.entities.Role;
+import org.irlab.model.entities.Alumno;
+import org.irlab.model.entities.Profesor;
+import org.irlab.model.entities.Asignatura;
+import org.irlab.model.entities.Clase;
 import org.irlab.model.entities.User;
 import org.irlab.model.exceptions.RoleNotFoundException;
 import org.irlab.model.exceptions.UserAlreadyExistsException;
 import org.irlab.model.exceptions.UserNotFoundException;
+import org.irlab.model.exceptions.AlumnoAlreadyExistsException;
+import org.irlab.model.exceptions.AlumnoNotFoundException;
+import org.irlab.model.exceptions.ClaseNotFoundException;
 
 import com.google.common.base.Preconditions;
 
@@ -122,5 +131,54 @@ public class UserServiceImpl implements UserService {
             }
         }
     }
+    @Override
+    public void createAlumno (@Nonnull String DNI, @Nonnull String nombre, @Nonnull String apel1, @Nonnull String apel2, long curso, @Nonnull String grupo) throws AlumnoAlreadyExistsException, ClaseNotFoundException{
+        try (var em = AppEntityManagerFactory.getInstance().createEntityManager()) {
+            Alumno r = AlumnoDao.findByDni(em, DNI);
+            if (r != null){
+                throw new AlumnoAlreadyExistsException(r);
+            }
+            Clase p = null;
+            try {p = ClaseDao.findByCursoYClase(em, curso, grupo);}
+            catch (Exception e){throw new ClaseNotFoundException(p);}
+            
+                Alumno alumno = new Alumno(DNI, nombre, apel1, apel2, p);
+                try {
+                    em.getTransaction().begin();
+                    em.persist(alumno);
+                    em.getTransaction().commit();
+                } catch (Exception e) {
+                    em.getTransaction().rollback();
+                    throw e;
+                }
+            }
+        }
+        @Override
 
-}
+        public void updateAlumno(@Nonnull String DNI, long curso, @Nonnull String grupo) throws AlumnoNotFoundException, ClaseNotFoundException
+        { 
+            try (var em = AppEntityManagerFactory.getInstance().createEntityManager()) {
+                Alumno r = AlumnoDao.findByDni(em, DNI);
+                if (r == null){
+                    throw new AlumnoNotFoundException(r);
+                }
+                Clase p = null;
+                try {p = ClaseDao.findByCursoYClase(em, curso, grupo);}
+                catch (Exception e){throw new ClaseNotFoundException(p);}
+                    try {
+                        em.getTransaction().begin();
+                        AlumnoDao.update(em, r);
+                        em.getTransaction().commit();
+                    } catch (Exception e) {
+                        em.getTransaction().rollback();
+                        throw e;
+                    }
+                }
+
+
+
+                }
+
+    }
+
+

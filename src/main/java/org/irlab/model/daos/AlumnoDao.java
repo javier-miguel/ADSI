@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.irlab.model.entities.Alumno;
 
+
 import java.util.List;
 
 public class AlumnoDao {
@@ -11,12 +12,10 @@ public class AlumnoDao {
     public static Alumno findByDni(EntityManager em, String dni){
         TypedQuery<Alumno> a = em.createQuery("select a from Alumno a where a.dni = :dni", Alumno.class)
                 .setParameter("dni", dni);
-
-        if(a.getSingleResult() == null){
-            return null;
-        }else{
-            return a.getSingleResult();
-        }
+        List<Alumno> queryResult = a.getResultList();
+        if (queryResult.size() ==1) {
+            return a.getSingleResult();}
+            else return null;
     }
 
     public static List<Alumno> findByNombre(EntityManager em, String nombre){
