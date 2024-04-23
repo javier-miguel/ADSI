@@ -40,7 +40,7 @@ import jakarta.persistence.EntityManager;
 public class App {
 
     private enum Command {
-        GREET_USER, CHANGE_GREETING, CREATE_USER, CREATE_ALUMNO, UPDATE_ALUMNO, EXIT
+        GREET_USER, CHANGE_GREETING, CREATE_USER, CREATE_ALUMNO, UPDATE_ALUMNO, REMOVE_ALUMNO, EXIT
     }
 
     private static final int CORRECT_SHUTDOWN = 50000;
@@ -91,6 +91,7 @@ public class App {
         System.out.println("  3) Add a new user");
         System.out.println("  4) Add a new Alumno");
         System.out.println("  5) Update an Alumno");
+        System.out.println("  5) Remove an Alumno");
 
 
         System.out.println();
@@ -115,6 +116,8 @@ public class App {
                     return Command.CREATE_ALUMNO;
                 case '5':
                     return Command.UPDATE_ALUMNO;
+                case '6':
+                    return Command.REMOVE_ALUMNO;
                 case 'q':
                     return Command.EXIT;
                 default:
@@ -189,11 +192,11 @@ public class App {
         try {
             
             userService.createAlumno(AlDni,AlName, Al1Ap, Al2Ap, AlYear, AlGroup);
-            System.out.println("User created");
+            System.out.println("Alumno created");
         } catch (AlumnoAlreadyExistsException e) {
-            System.out.println("User not created: a user with that name already exists.");
+            System.out.println("Alumno not created: an Alumno with that DNI already exists.");
         } catch (ClaseNotFoundException e) {
-            System.out.println("User not created: invalid role");
+            System.out.println("Alumno not created: invalid class");
         }
     }
     private static void updateAlumno() {
@@ -203,12 +206,22 @@ public class App {
         try {
             
             userService.updateAlumno(AlDni, AlYear, AlGroup);
-            System.out.println("User created");
+            System.out.println("Alumno updated");
         } catch (AlumnoNotFoundException e) {
-            System.out.println("User not created: a user with that name already exists.");
+            System.out.println("Alumno not updated: there isn't an Alumno wiith that DNI.");
         } catch (ClaseNotFoundException e) {
-            System.out.println("User not created: invalid role");
+            System.out.println("Alumno not updated: invalid class");
         }
+    }
+    private static void removeAlumno() {
+        String AlDni = readInput("Alumno's DNI: ", "You must supply an alumno's DNI");
+        try {
+            
+            userService.removeAlumno(AlDni);
+            System.out.println("Alumno removed");
+        } catch (AlumnoNotFoundException e) {
+            System.out.println("Alumno not removed: There isn't an alumno with that DNI.");
+        } 
     }
 
     public static void main(String[] args) throws SQLException {
@@ -224,6 +237,7 @@ public class App {
             case CREATE_USER -> createUser();
             case CREATE_ALUMNO -> createAlumno();
             case UPDATE_ALUMNO -> updateAlumno();
+            case REMOVE_ALUMNO -> removeAlumno();
             case EXIT -> exit = true;
             }
         }

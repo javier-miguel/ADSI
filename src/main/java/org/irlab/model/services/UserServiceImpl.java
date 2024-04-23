@@ -25,6 +25,8 @@ import org.irlab.common.AppEntityManagerFactory;
 import org.irlab.model.daos.AlumnoDao;
 import org.irlab.model.daos.RoleDao;
 import org.irlab.model.daos.UserDao;
+
+import org.irlab.model.daos.ProfesorDao;
 import org.irlab.model.daos.ClaseDao;
 import org.irlab.model.entities.Role;
 import org.irlab.model.entities.Alumno;
@@ -178,7 +180,51 @@ public class UserServiceImpl implements UserService {
 
 
                 }
+                public void removeAlumno(@Nonnull String DNI) throws AlumnoNotFoundException
+                { 
+                    try (var em = AppEntityManagerFactory.getInstance().createEntityManager()) {
+                        Alumno alumno = AlumnoDao.findByDni(em, DNI);
+                        if (alumno == null){
+                            throw new AlumnoNotFoundException(alumno);
+                        }
+                        
+                            try {
+                                em.getTransaction().begin();
+                                em.remove(alumno);
+                                em.getTransaction().commit();
+                            } catch (Exception e) {
+                                em.getTransaction().rollback();
+                                throw e;
+                            }
+                        }
+        
+        
+        
+                        }
+    public void updateProfesor(@Nonnull String DNI, long curso, @Nonnull String grupo) throws AlumnoNotFoundException, ClaseNotFoundException
+        { 
+            try (var em = AppEntityManagerFactory.getInstance().createEntityManager()) {
+                Profesor r = ProfesorDao.findByDni(em, DNI);
+                if (r == null){
+                    throw new ProfesorNotFoundException(r);
+                }
+                Clase p = null;
+                try {p = ClaseDao.findByCursoYClase(em, curso, grupo);}
+                catch (Exception e){throw new ClaseNotFoundException(p);}
+                    try {
+                        em.getTransaction().begin();
+                        AlumnoDao.update(em, r);
+                        em.getTransaction().commit();
+                    } catch (Exception e) {
+                        em.getTransaction().rollback();
+                        throw e;
+                    }
+                }
 
+
+
+                }
+        
     }
 
 

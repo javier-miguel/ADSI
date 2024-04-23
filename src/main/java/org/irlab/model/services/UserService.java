@@ -72,6 +72,8 @@ public interface UserService {
                 throws AlumnoAlreadyExistsException, ClaseNotFoundException;
     void updateAlumno(@Nonnull String DNI, long curso, @Nonnull String grupo) 
                 throws AlumnoNotFoundException, ClaseNotFoundException;
+    void removeAlumno(@Nonnull String DNI) 
+                throws AlumnoNotFoundException;
     void createUser(@Nonnull String name, @Nonnull String role)
             throws UserAlreadyExistsException, RoleNotFoundException;
 
