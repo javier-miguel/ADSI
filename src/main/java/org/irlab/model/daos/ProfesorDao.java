@@ -11,12 +11,11 @@ public class ProfesorDao {
     public static Profesor findByDni(EntityManager em, String dni){
         TypedQuery<Profesor> p = em.createQuery("select p from Profesor p where p.dni = :dni", Profesor.class)
                 .setParameter("dni", dni);
+        List<Profesor> queryResult = p.getResultList();
 
-        if(p.getSingleResult() == null){
-            return null;
-        }else{
-            return p.getSingleResult();
-        }
+        if (queryResult.size() ==1) {
+            return p.getSingleResult();}
+            else return null;
     }
 
     public static List<Profesor> findByNombre(EntityManager em, String nombre){

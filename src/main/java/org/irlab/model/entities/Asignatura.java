@@ -20,6 +20,7 @@ public class Asignatura{
     @Column(name = "dia_semana", nullable = false)
     private Integer diaSemana;
 
+
     @Column(name = "hora_inicio", nullable = false)
     private LocalTime horaInicio;
 
@@ -34,7 +35,6 @@ public class Asignatura{
     @ManyToOne
     @JoinColumn(name = "num_profesor", insertable = false, updatable = false, nullable = false)
     private Profesor profesor;
-
     public Asignatura(){
 
     }
@@ -50,6 +50,7 @@ public class Asignatura{
         this.clase = clase;
         this.profesor = profesor;
     }
+
 
     public Long getId() {
         return id;
@@ -68,8 +69,6 @@ public class Asignatura{
     public void setNumAula(Integer numAula){ this.numAula = numAula;}
 
     public Integer getDiaSemanaa(){ return diaSemana;}
-
-    public void setDiaSemana(Integer diaSemana){ this.diaSemana = diaSemana; }
 
     public LocalTime getHoraInicio(){return horaInicio;}
 

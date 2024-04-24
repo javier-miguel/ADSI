@@ -209,16 +209,21 @@ public class UserServiceImpl implements UserService {
         
                         }
     @Override
-    public void updateProfesor(@Nonnull String DNI) throws ProfesorNotFoundException
+    public void updateProfesor(Asignatura a, @Nonnull String DNI) throws ProfesorNotFoundException
         { 
             try (var em = AppEntityManagerFactory.getInstance().createEntityManager()) {
-                Profesor r = ProfesorDao.findByDni(em, DNI);
+                Profesor r = ProfesorDao.findByDni(em,DNI);
                 if (r == null){
                     throw new ProfesorNotFoundException(r);
-                }                
+                }         
                     try {
                         em.getTransaction().begin();
-                        ProfesorDao.update(em, r);
+                        Asignatura m = em.merge(a);
+                        em.remove(m);
+                        //em.getTransaction().commit();
+                        m.setProfesor(r);
+                        //em.getTransaction().begin();
+                        em.persist(m);       
                         em.getTransaction().commit();
                     } catch (Exception e) {
                         em.getTransaction().rollback();
@@ -232,7 +237,7 @@ public class UserServiceImpl implements UserService {
         
     public List<Asignatura> showHorario(@Nonnull String Dni) throws AlumnoNotFoundException, AsignaturasNotFoundException{
         try (var em = AppEntityManagerFactory.getInstance().createEntityManager()) {
-        boolean alumno = true;
+            boolean alumno = true;
         Alumno a = AlumnoDao.findByDni(em, Dni);
         if (a == null){
             alumno=false;
@@ -253,6 +258,12 @@ public class UserServiceImpl implements UserService {
         }
         Collections.sort(list,new AsignaturaComparator());
         return list;
+    }
+}
+public List<Asignatura> showAsignaturas(){
+    try (var em = AppEntityManagerFactory.getInstance().createEntityManager()) {
+    return AsignaturaDao.findAll(em);
+    
     }
 }
 class AsignaturaComparator implements java.util.Comparator<Asignatura> {

@@ -39,6 +39,13 @@ public class AsignaturaDao {
         return a.getResultList();
     }
 
+    public static List<Asignatura> findAll(EntityManager em){
+        TypedQuery<Asignatura> a = em.createQuery("select a from Asignatura a ",
+                Asignatura.class);
+
+        return a.getResultList();
+    }
+
     public static void update(EntityManager em, Asignatura asignatura){
         em.persist(asignatura);
     }

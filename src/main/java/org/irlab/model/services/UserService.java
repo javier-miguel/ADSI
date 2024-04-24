@@ -79,10 +79,11 @@ public interface UserService {
 
     void removeAlumno(@Nonnull String DNI) 
                 throws AlumnoNotFoundException;
-     void updateProfesor(@Nonnull String DNI) 
+     void updateProfesor(Asignatura a, @Nonnull String DNI) 
                 throws ProfesorNotFoundException;
      void createUser(@Nonnull String name, @Nonnull String role)
             throws UserAlreadyExistsException, RoleNotFoundException;
+     List<Asignatura> showAsignaturas();
 
 List <Asignatura> showHorario(@Nonnull String Dni) throws AsignaturasNotFoundException, AlumnoNotFoundException;
 }

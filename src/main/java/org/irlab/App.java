@@ -20,6 +20,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -41,6 +42,7 @@ import org.irlab.model.services.UserServiceImpl;
 import org.irlab.model.entities.Asignatura;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 
 public class App {
 
@@ -236,24 +238,44 @@ public class App {
         } 
     }
     private static void updateProfesor() {
+        String[] diasSemana = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"};
+        List <Asignatura> list = userService.showAsignaturas();
+        List <Asignatura> lista = new ArrayList<>();
+        Integer i = 0;
+        while (list.listIterator().hasNext()){
+         Asignatura a = list.get(0);
+        System.out.println(i+1 + ": " + diasSemana[a.getDiaSemanaa()-1] + " from "+ a.getHoraInicio() + " to " + a.getHoraFin() + ": " + a.getNombre() + " taught by " + a.getProfesor().getDni());
+        i++;
+        lista.add(a);
+        list.remove(0);
+    }   
+        String asig = readInput("Choose an Asignatura: ", "You must supply an user's DNI");
+        int x=Integer.parseInt(asig);
         String AlDni = readInput("Alumno's DNI: ", "You must supply an profesor's DNI");
         try {
-            
-            userService.updateProfesor(AlDni);
+            userService.updateProfesor(lista.get(x-1), AlDni);
             System.out.println("Profesor updated");
         } catch (ProfesorNotFoundException e) {
-            System.out.println("Profesor not updated: there isn't a Profesor wiith that DNI.");
-        } 
+            System.out.println("Profesor not updated: there isn't a Profesor with that DNI.");
+        }
     }
 
     private static void showHorario(){
+        String[] diasSemana = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"};
         String AlDni = readInput("User's DNI: ", "You must supply an user's DNI");
         try {
             List<Asignatura> list = userService.showHorario(AlDni);
             System.out.println("Classes that you have: \n");
+            Integer d_actual = 0;
         while (list.listIterator().hasNext()){
             Asignatura a = list.get(0);
-            System.out.println(a.getNombre() + ": "+ a.getDiaSemanaa() +" from "+ a.getHoraInicio() + " to " + a.getHoraFin() + "\n");
+            Integer dia = a.getDiaSemanaa();
+            if (d_actual != dia){
+                System.out.println("\n");
+                d_actual=dia;
+                System.out.println(diasSemana[d_actual-1]+ "\n");
+            }
+            System.out.println("-from "+ a.getHoraInicio() + " to " + a.getHoraFin() + ": " + a.getNombre());
             list.remove(0);
         }
         
