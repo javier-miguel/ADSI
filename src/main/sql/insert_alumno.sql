@@ -22,4 +22,4 @@ VALUES  ('12345678Z', 'Miguel Anxo', 'Mosquera', 'Gomez', 1),
         ('12152326T', 'Moncho', 'Martin', 'Cambeiro', 11),
         ('45484741X', 'Javier', 'Miguel', 'Sanchez', 11),
         ('56514873D', 'Xabier Xoan', 'Carricoba', 'Muñoa', 12),
-        ('74123698B', 'Alvaro', 'Regueira', 'Vilar', 12),
+        ('74123698B', 'Alvaro', 'Regueira', 'Vilar', 12)

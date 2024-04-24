@@ -39,6 +39,7 @@ import org.irlab.model.exceptions.UserAlreadyExistsException;
 import org.irlab.model.exceptions.UserNotFoundException;
 import org.irlab.model.exceptions.AlumnoAlreadyExistsException;
 import org.irlab.model.exceptions.AlumnoNotFoundException;
+import org.irlab.model.exceptions.ProfesorNotFoundException;
 import org.irlab.model.exceptions.ClaseNotFoundException;
 
 import com.google.common.base.Preconditions;
@@ -201,7 +202,7 @@ public class UserServiceImpl implements UserService {
         
         
                         }
-    public void updateProfesor(@Nonnull String DNI, long curso, @Nonnull String grupo) throws AlumnoNotFoundException, ClaseNotFoundException
+    public void updateProfesor(@Nonnull String DNI, long curso, @Nonnull String grupo) throws ProfesorNotFoundException, ClaseNotFoundException
         { 
             try (var em = AppEntityManagerFactory.getInstance().createEntityManager()) {
                 Profesor r = ProfesorDao.findByDni(em, DNI);
@@ -213,7 +214,7 @@ public class UserServiceImpl implements UserService {
                 catch (Exception e){throw new ClaseNotFoundException(p);}
                     try {
                         em.getTransaction().begin();
-                        AlumnoDao.update(em, r);
+                        ProfesorDao.update(em, r);
                         em.getTransaction().commit();
                     } catch (Exception e) {
                         em.getTransaction().rollback();
