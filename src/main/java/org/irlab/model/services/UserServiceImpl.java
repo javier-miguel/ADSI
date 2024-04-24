@@ -16,8 +16,10 @@
 
 package org.irlab.model.services;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Collections;
 
 import javax.annotation.Nonnull;
 
@@ -27,6 +29,7 @@ import org.irlab.model.daos.RoleDao;
 import org.irlab.model.daos.UserDao;
 
 import org.irlab.model.daos.ProfesorDao;
+import org.irlab.model.daos.AsignaturaDao;
 import org.irlab.model.daos.ClaseDao;
 import org.irlab.model.entities.Role;
 import org.irlab.model.entities.Alumno;
@@ -39,8 +42,10 @@ import org.irlab.model.exceptions.UserAlreadyExistsException;
 import org.irlab.model.exceptions.UserNotFoundException;
 import org.irlab.model.exceptions.AlumnoAlreadyExistsException;
 import org.irlab.model.exceptions.AlumnoNotFoundException;
+import org.irlab.model.exceptions.AsignaturasNotFoundException;
 import org.irlab.model.exceptions.ProfesorNotFoundException;
 import org.irlab.model.exceptions.ClaseNotFoundException;
+
 
 import com.google.common.base.Preconditions;
 
@@ -181,7 +186,8 @@ public class UserServiceImpl implements UserService {
 
 
                 }
-                public void removeAlumno(@Nonnull String DNI) throws AlumnoNotFoundException
+    @Override
+    public void removeAlumno(@Nonnull String DNI) throws AlumnoNotFoundException
                 { 
                     try (var em = AppEntityManagerFactory.getInstance().createEntityManager()) {
                         Alumno alumno = AlumnoDao.findByDni(em, DNI);
@@ -202,16 +208,14 @@ public class UserServiceImpl implements UserService {
         
         
                         }
-    public void updateProfesor(@Nonnull String DNI, long curso, @Nonnull String grupo) throws ProfesorNotFoundException, ClaseNotFoundException
+    @Override
+    public void updateProfesor(@Nonnull String DNI) throws ProfesorNotFoundException
         { 
             try (var em = AppEntityManagerFactory.getInstance().createEntityManager()) {
                 Profesor r = ProfesorDao.findByDni(em, DNI);
                 if (r == null){
                     throw new ProfesorNotFoundException(r);
-                }
-                Clase p = null;
-                try {p = ClaseDao.findByCursoYClase(em, curso, grupo);}
-                catch (Exception e){throw new ClaseNotFoundException(p);}
+                }                
                     try {
                         em.getTransaction().begin();
                         ProfesorDao.update(em, r);
@@ -226,6 +230,44 @@ public class UserServiceImpl implements UserService {
 
                 }
         
+    public List<Asignatura> showHorario(@Nonnull String Dni) throws AlumnoNotFoundException, AsignaturasNotFoundException{
+        try (var em = AppEntityManagerFactory.getInstance().createEntityManager()) {
+        boolean alumno = true;
+        Alumno a = AlumnoDao.findByDni(em, Dni);
+        if (a == null){
+            alumno=false;
+            Profesor p = ProfesorDao.findByDni(em, Dni);
+            if (p ==null){
+                throw new AlumnoNotFoundException(a);
+            }
+        }
+        List<Asignatura> list;
+        if (alumno){
+            list = AsignaturaDao.findByClase(em, a.getClase().getId());
+        }
+        else{
+            list =AsignaturaDao.findByProfesor(em, Dni);
+        }
+        if (list.isEmpty()){
+            throw new AsignaturasNotFoundException(null);
+        }
+        Collections.sort(list,new AsignaturaComparator());
+        return list;
     }
+}
+class AsignaturaComparator implements java.util.Comparator<Asignatura> {
+    public int compareDia(Asignatura a, Asignatura b) {
+        return a.getDiaSemanaa()-b.getDiaSemanaa();
+    }
+    public int compareHora (Asignatura a, Asignatura b){
+        return a.getHoraInicio().compareTo(b.getHoraInicio());
+    }
+    public int compare (Asignatura a, Asignatura b){
+        int x=compareDia(a, b);
+        if(x==0){x=compareHora(a,b);}
+        return x;
+    }
+}
+ }
 
 

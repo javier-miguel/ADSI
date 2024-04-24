@@ -20,6 +20,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import java.util.List;
+
 
 import javax.annotation.Nonnull;
 
@@ -29,19 +31,21 @@ import org.irlab.model.exceptions.UserAlreadyExistsException;
 import org.irlab.model.exceptions.UserNotFoundException;
 import org.irlab.model.exceptions.ClaseNotFoundException;
 import org.irlab.model.exceptions.AlumnoNotFoundException;
+import org.irlab.model.exceptions.AsignaturasNotFoundException;
 import org.irlab.model.exceptions.ProfesorNotFoundException;
 import org.irlab.model.exceptions.AlumnoAlreadyExistsException;
 import org.irlab.model.services.RoleService;
 import org.irlab.model.services.RoleServiceImpl;
 import org.irlab.model.services.UserService;
 import org.irlab.model.services.UserServiceImpl;
+import org.irlab.model.entities.Asignatura;
 
 import jakarta.persistence.EntityManager;
 
 public class App {
 
     private enum Command {
-        GREET_USER, CHANGE_GREETING, CREATE_USER, CREATE_ALUMNO, UPDATE_ALUMNO, REMOVE_ALUMNO, UPDATE_PROFESOR, EXIT
+        GREET_USER, CHANGE_GREETING, CREATE_USER, CREATE_ALUMNO, UPDATE_ALUMNO, REMOVE_ALUMNO, UPDATE_PROFESOR, SHOW_HORARIO, EXIT
     }
 
     private static final int CORRECT_SHUTDOWN = 50000;
@@ -92,7 +96,10 @@ public class App {
         System.out.println("  3) Add a new user");
         System.out.println("  4) Add a new Alumno");
         System.out.println("  5) Update an Alumno");
-        System.out.println("  5) Remove an Alumno");
+        System.out.println("  6) Remove an Alumno");
+        System.out.println("  7) Update a Profesor");
+        System.out.println("  8) Show horario");
+
 
 
         System.out.println();
@@ -121,6 +128,8 @@ public class App {
                     return Command.REMOVE_ALUMNO;
                 case '7':
                     return Command.UPDATE_PROFESOR;
+                case '8':
+                    return Command.SHOW_HORARIO;
                 case 'q':
                     return Command.EXIT;
                 default:
@@ -237,6 +246,25 @@ public class App {
         } 
     }
 
+    private static void showHorario(){
+        String AlDni = readInput("User's DNI: ", "You must supply an user's DNI");
+        try {
+            List<Asignatura> list = userService.showHorario(AlDni);
+            System.out.println("Classes that you have: \n");
+        while (list.listIterator().hasNext()){
+            Asignatura a = list.get(0);
+            System.out.println(a.getNombre() + ": "+ a.getDiaSemanaa() +" from "+ a.getHoraInicio() + " to " + a.getHoraFin() + "\n");
+            list.remove(0);
+        }
+        
+        } catch (AsignaturasNotFoundException e) {
+            System.out.println("Profesor not updated: there isn't a Profesor wiith that DNI.");
+        } 
+        catch (AlumnoNotFoundException e){
+
+        }
+    }
+
     public static void main(String[] args) throws SQLException {
         init();
         boolean exit = false;
@@ -253,6 +281,7 @@ public class App {
             case UPDATE_ALUMNO -> updateAlumno();
             case REMOVE_ALUMNO -> removeAlumno();
             case UPDATE_PROFESOR ->updateProfesor();
+            case SHOW_HORARIO -> showHorario();
             case EXIT -> exit = true;
             }
         }
