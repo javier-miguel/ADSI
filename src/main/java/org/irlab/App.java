@@ -29,6 +29,7 @@ import org.irlab.model.exceptions.UserAlreadyExistsException;
 import org.irlab.model.exceptions.UserNotFoundException;
 import org.irlab.model.exceptions.ClaseNotFoundException;
 import org.irlab.model.exceptions.AlumnoNotFoundException;
+import org.irlab.model.exceptions.ProfesorNotFoundException;
 import org.irlab.model.exceptions.AlumnoAlreadyExistsException;
 import org.irlab.model.services.RoleService;
 import org.irlab.model.services.RoleServiceImpl;
@@ -40,7 +41,7 @@ import jakarta.persistence.EntityManager;
 public class App {
 
     private enum Command {
-        GREET_USER, CHANGE_GREETING, CREATE_USER, CREATE_ALUMNO, UPDATE_ALUMNO, REMOVE_ALUMNO, EXIT
+        GREET_USER, CHANGE_GREETING, CREATE_USER, CREATE_ALUMNO, UPDATE_ALUMNO, REMOVE_ALUMNO, UPDATE_PROFESOR, EXIT
     }
 
     private static final int CORRECT_SHUTDOWN = 50000;
@@ -118,6 +119,8 @@ public class App {
                     return Command.UPDATE_ALUMNO;
                 case '6':
                     return Command.REMOVE_ALUMNO;
+                case '7':
+                    return Command.UPDATE_PROFESOR;
                 case 'q':
                     return Command.EXIT;
                 default:
@@ -223,6 +226,16 @@ public class App {
             System.out.println("Alumno not removed: There isn't an alumno with that DNI.");
         } 
     }
+    private static void updateProfesor() {
+        String AlDni = readInput("Alumno's DNI: ", "You must supply an profesor's DNI");
+        try {
+            
+            userService.updateProfesor(AlDni);
+            System.out.println("Profesor updated");
+        } catch (ProfesorNotFoundException e) {
+            System.out.println("Profesor not updated: there isn't a Profesor wiith that DNI.");
+        } 
+    }
 
     public static void main(String[] args) throws SQLException {
         init();
@@ -232,12 +245,14 @@ public class App {
             System.out.println();
             Command command = getCommand();
             switch (command) {
-            case GREET_USER -> greetUser();
+     
+                case GREET_USER -> greetUser();
             case CHANGE_GREETING -> changeGreeting();
             case CREATE_USER -> createUser();
             case CREATE_ALUMNO -> createAlumno();
             case UPDATE_ALUMNO -> updateAlumno();
             case REMOVE_ALUMNO -> removeAlumno();
+            case UPDATE_PROFESOR ->updateProfesor();
             case EXIT -> exit = true;
             }
         }

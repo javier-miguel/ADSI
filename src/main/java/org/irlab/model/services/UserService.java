@@ -25,6 +25,8 @@ import org.irlab.model.exceptions.RoleNotFoundException;
 import org.irlab.model.exceptions.UserAlreadyExistsException;
 import org.irlab.model.exceptions.UserNotFoundException;
 import org.irlab.model.exceptions.AlumnoNotFoundException;
+
+import org.irlab.model.exceptions.ProfesorNotFoundException;
 import org.irlab.model.exceptions.ClaseNotFoundException;
 
 /**
@@ -72,8 +74,11 @@ public interface UserService {
                 throws AlumnoAlreadyExistsException, ClaseNotFoundException;
     void updateAlumno(@Nonnull String DNI, long curso, @Nonnull String grupo) 
                 throws AlumnoNotFoundException, ClaseNotFoundException;
+
     void removeAlumno(@Nonnull String DNI) 
                 throws AlumnoNotFoundException;
+     void updateProfesor(@Nonnull String DNI) 
+                throws ProfesorNotFoundException;
     void createUser(@Nonnull String name, @Nonnull String role)
             throws UserAlreadyExistsException, RoleNotFoundException;
 
