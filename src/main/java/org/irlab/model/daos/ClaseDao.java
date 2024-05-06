@@ -1,15 +1,11 @@
 package org.irlab.model.daos;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.TypedQuery;
 import org.irlab.model.entities.Clase;
-import org.irlab.model.entities.Profesor;
-import org.irlab.model.entities.User;
+
 
 import java.util.List;
-import java.util.Optional;
 
 public class ClaseDao {
 

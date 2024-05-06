@@ -1,25 +1,7 @@
 INSERT INTO Alumno (DNI, nombre, apellido1, apellido2, num_clase)
-VALUES  ('12345678Z', 'Miguel Anxo', 'Mosquera', 'Gomez', 1),
+VALUES  
         ('23456789D', 'Noelia', 'Mosquera', 'Villasenin', 1),
         ('34567891H', 'Antonio', 'Vazquez', 'Martinez', 2),
         ('45678912S', 'Brais', 'Torres', 'Lopez', 2),
         ('56789123F', 'Sergio', 'Couselo', 'Blanco', 3),
-        ('67891234H', 'Manuel', 'Rama', 'Villasenín', 3),
-        ('78912345N', 'Brais', 'Fraga', 'Pose', 4),
-        ('89123456C', 'Karolina', 'del Rio', 'Svefors', 4),
-        ('91234567F', 'Diego', 'Iglesias', 'Pose', 5),
-        ('12234556M', 'Daniel', 'Gomez', 'Sanchez', 5),
-        ('13467928W', 'James', 'Stutt', 'Pose', 6),
-        ('73198246X', 'Guillen', 'Porto', 'Gonzalez', 6),
-        ('41526374N', 'Adrian', 'Rego', 'Criado', 7),
-        ('41527485L', 'Alberto', 'Fernandez', 'Valiño', 7),
-        ('52637485F', 'Ivan', 'Vidal', 'Rey', 8),
-        ('15264859N', 'Kevin', 'Graña', 'Suarez', 8),
-        ('75866251S', 'Enrique', 'Adega', 'Fernandez', 9),
-        ('74148525K', 'Alejandro', 'Becerra', 'Suarez', 9),
-        ('96368525C', 'Lucas', 'Piñeiro', 'Añon', 10),
-        ('96958584Z', 'Raul', 'Mouzo', 'Quiza', 10),
-        ('12152326T', 'Moncho', 'Martin', 'Cambeiro', 11),
-        ('45484741X', 'Javier', 'Miguel', 'Sanchez', 11),
-        ('56514873D', 'Xabier Xoan', 'Carricoba', 'Muñoa', 12),
-        ('74123698B', 'Alvaro', 'Regueira', 'Vilar', 12)
+        ('91234567F', 'Diego', 'Iglesias', 'Pose', 5)

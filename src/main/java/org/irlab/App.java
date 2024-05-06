@@ -19,8 +19,8 @@ package org.irlab;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -28,21 +28,17 @@ import javax.annotation.Nonnull;
 
 import org.irlab.common.AppEntityManagerFactory;
 import org.irlab.model.exceptions.RoleNotFoundException;
-import org.irlab.model.exceptions.UserAlreadyExistsException;
-import org.irlab.model.exceptions.UserNotFoundException;
+
 import org.irlab.model.exceptions.ClaseNotFoundException;
 import org.irlab.model.exceptions.AlumnoNotFoundException;
 import org.irlab.model.exceptions.AsignaturasNotFoundException;
 import org.irlab.model.exceptions.ProfesorNotFoundException;
 import org.irlab.model.exceptions.AlumnoAlreadyExistsException;
-import org.irlab.model.services.RoleService;
-import org.irlab.model.services.RoleServiceImpl;
 import org.irlab.model.services.UserService;
 import org.irlab.model.services.UserServiceImpl;
 import org.irlab.model.entities.Asignatura;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 
 public class App {
 
@@ -54,9 +50,10 @@ public class App {
 
     private static UserService userService = null;
 
-    private static RoleService roleService = null;
 
     private static Scanner scanner = null;
+
+    private static String dni = null;
 
     private static void init() {
         try (EntityManager em = AppEntityManagerFactory.getInstance().createEntityManager()) {}
@@ -76,7 +73,6 @@ public class App {
                             """);
             System.exit(1);
         }
-        roleService = new RoleServiceImpl();
     }
 
     private static void shutdown() throws SQLException {
@@ -92,10 +88,18 @@ public class App {
     }
 
     private static Command getUser() {
+       String[] d = {"50213612N", "51223713E","23456789D","34567891H","45678912S","56789123F","91234567F"};
+       ArrayList<String> dnis = new ArrayList<String>(Arrays.asList(d));
         System.out.println("Choose an user:");
         System.out.println("  1) Administrador");
-        System.out.println("  2) Profesor");
-        System.out.println("  3) Alumno");
+        System.out.println("  2) Profesor Moncho Fernández");
+        System.out.println("  3) Profesor Xurxo Romero");
+        System.out.println("  4) Alumno Noelia Mosquera");
+        System.out.println("  5) Alumno Antonio Vázquez");
+        System.out.println("  6) Alumno Brais Torres");
+        System.out.println("  7) Alumno Sergio Curselo");
+        System.out.println("  8) Alumno Diego Iglesias");
+
 
         System.out.println();
         System.out.println("  q) Exit");
@@ -108,13 +112,13 @@ public class App {
             } else if (input.length() > 1) {
                 System.err.println(input + " is not a valid option");
             } else {
-                switch (input.charAt(0)) {
+                char x = input.charAt(0);
+                switch (x) {
                 
                 case '1':
                     return Command.ADMIN;
-                case '2':
-                    return Command.USER;
-                case '3':
+                case '2','3','4','5','6','7','8':
+                dni = dnis.get(Character.getNumericValue(x)-2);
                     return Command.USER;
                 case 'q':
                     return Command.EXIT;
@@ -272,9 +276,8 @@ public class App {
 
     private static void showHorario(){
         String[] diasSemana = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"};
-        String AlDni = readInput("User's DNI: ", "You must supply an user's DNI");
         try {
-            List<Asignatura> list = userService.showHorario(AlDni);
+            List<Asignatura> list = userService.showHorario(dni);
             System.out.println("Classes that you have: \n");
             Integer d_actual = 0;
         while (list.listIterator().hasNext()){
@@ -290,7 +293,7 @@ public class App {
         }
         
         } catch (AsignaturasNotFoundException e) {
-            System.out.println("Profesor not updated: there isn't a Profesor wiith that DNI.");
+            System.out.println("You have no asignaturas in your horario");
         } 
         catch (AlumnoNotFoundException e){
 
@@ -305,15 +308,15 @@ public class App {
             System.out.println();
             Command user = getUser();
             if (user ==  Command.ADMIN ){
-            Command command = getCommand();
-            switch (command) {
-                case CREATE_ALUMNO -> createAlumno();
-                case UPDATE_ALUMNO -> updateAlumno();
-                case REMOVE_ALUMNO -> removeAlumno();
-                case UPDATE_PROFESOR ->updateProfesor();
-                case EXIT -> exit = true;
-                default -> throw new IllegalArgumentException("Unexpected value: " + command);
-            }
+                Command command = getCommand();
+                switch (command) {
+                    case CREATE_ALUMNO -> createAlumno();
+                    case UPDATE_ALUMNO -> updateAlumno();
+                    case REMOVE_ALUMNO -> removeAlumno();
+                    case UPDATE_PROFESOR ->updateProfesor();
+                    case EXIT -> exit = true;
+                    default -> throw new IllegalArgumentException("Unexpected value: " + command);
+                }
         }
             else {
                 Command command = getCommandUser();

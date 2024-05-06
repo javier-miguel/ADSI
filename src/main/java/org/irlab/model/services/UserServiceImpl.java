@@ -24,7 +24,6 @@ import javax.annotation.Nonnull;
 import org.irlab.common.AppEntityManagerFactory;
 import org.irlab.model.daos.AlumnoDao;
 import org.irlab.model.daos.RoleDao;
-import org.irlab.model.daos.UserDao;
 
 import org.irlab.model.daos.ProfesorDao;
 import org.irlab.model.daos.AsignaturaDao;
@@ -34,24 +33,18 @@ import org.irlab.model.entities.Alumno;
 import org.irlab.model.entities.Profesor;
 import org.irlab.model.entities.Asignatura;
 import org.irlab.model.entities.Clase;
-import org.irlab.model.entities.User;
 import org.irlab.model.exceptions.RoleNotFoundException;
-import org.irlab.model.exceptions.UserAlreadyExistsException;
 import org.irlab.model.exceptions.AlumnoAlreadyExistsException;
 import org.irlab.model.exceptions.AlumnoNotFoundException;
 import org.irlab.model.exceptions.AsignaturasNotFoundException;
 import org.irlab.model.exceptions.ProfesorNotFoundException;
 import org.irlab.model.exceptions.ClaseNotFoundException;
 
-
-import com.google.common.base.Preconditions;
-
 /**
  * Implementation of the user service facade
  */
 public class UserServiceImpl implements UserService {
 
-    private static final String DEFAULT_GREETING = "Hello";
     private static final String DEFAULT_ROLE_NAME = "user";
 
 
@@ -70,34 +63,8 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    
 
    
-
-    
-
-    @Override
-    public void createUser(@Nonnull String name, @Nonnull String role)
-            throws UserAlreadyExistsException, RoleNotFoundException {
-        try (var em = AppEntityManagerFactory.getInstance().createEntityManager()) {
-            Role r = RoleDao.findByName(em, role)
-                    .orElseThrow(() -> new RoleNotFoundException(role));
-            var maybeUser = UserDao.findByName(em, name);
-            if (maybeUser.isPresent()) {
-                throw new UserAlreadyExistsException(name);
-            } else {
-                User user = new User(name, DEFAULT_GREETING, r);
-                try {
-                    em.getTransaction().begin();
-                    em.persist(user);
-                    em.getTransaction().commit();
-                } catch (Exception e) {
-                    em.getTransaction().rollback();
-                    throw e;
-                }
-            }
-        }
-    }
     @Override
     public void createAlumno (@Nonnull String DNI, @Nonnull String nombre, @Nonnull String apel1, @Nonnull String apel2, long curso, @Nonnull String grupo) throws AlumnoAlreadyExistsException, ClaseNotFoundException{
         try (var em = AppEntityManagerFactory.getInstance().createEntityManager()) {

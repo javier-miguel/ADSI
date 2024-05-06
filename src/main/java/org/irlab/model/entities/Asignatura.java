@@ -2,8 +2,7 @@ package org.irlab.model.entities;
 
 import jakarta.persistence.*;
 
-import java.io.Serializable;
-import java.sql.Time;
+
 import java.time.LocalTime;
 @Entity
 public class Asignatura{
