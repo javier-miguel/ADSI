@@ -45,7 +45,7 @@ import org.irlab.model.exceptions.ClaseNotFoundException;
  */
 public class UserServiceImpl implements UserService {
 
-    private static final String DEFAULT_ROLE_NAME = "user";
+    private static final String DEFAULT_ROLE_NAME = "alumno";
 
 
     public UserServiceImpl() throws RoleNotFoundException {

@@ -116,7 +116,6 @@
               <autocommit>true</autocommit>
               <srcFiles>
                 <srcFile>src/main/sql/insert_roles.sql</srcFile>
-                <srcFile>src/main/sql/insert_users.sql</srcFile>
                 <srcFile>src/main/sql/insert_profesor.sql</srcFile>
                 <srcFile>src/main/sql/insert_clase.sql</srcFile>
                 <srcFile>src/main/sql/insert_asignatura.sql</srcFile>
