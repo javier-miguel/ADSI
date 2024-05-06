@@ -17,8 +17,6 @@
 package org.irlab.model.services;
 
 import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
 import java.util.Collections;
 
 import javax.annotation.Nonnull;
@@ -39,7 +37,6 @@ import org.irlab.model.entities.Clase;
 import org.irlab.model.entities.User;
 import org.irlab.model.exceptions.RoleNotFoundException;
 import org.irlab.model.exceptions.UserAlreadyExistsException;
-import org.irlab.model.exceptions.UserNotFoundException;
 import org.irlab.model.exceptions.AlumnoAlreadyExistsException;
 import org.irlab.model.exceptions.AlumnoNotFoundException;
 import org.irlab.model.exceptions.AsignaturasNotFoundException;
@@ -57,7 +54,6 @@ public class UserServiceImpl implements UserService {
     private static final String DEFAULT_GREETING = "Hello";
     private static final String DEFAULT_ROLE_NAME = "user";
 
-    private static final String MESSAGE_FORMAT = "%s, %s!";
 
     public UserServiceImpl() throws RoleNotFoundException {
         try (var em = AppEntityManagerFactory.getInstance().createEntityManager()) {
@@ -74,48 +70,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    @Nonnull
-    public String greet(@Nonnull String name) {
-        Preconditions.checkNotNull(name, "name cannot be null");
+    
 
-        try (var em = AppEntityManagerFactory.getInstance().createEntityManager()) {
-            Optional<User> maybeUser = UserDao.findByName(em, name);
-            String greeting = maybeUser.map(User::getGreeting).orElseGet(() -> DEFAULT_GREETING);
+   
 
-            return String.format(Locale.ENGLISH, MESSAGE_FORMAT, greeting, name);
-        }
-    }
-
-    @Override
-    public void setUserGreeting(@Nonnull String name, @Nonnull String greeting)
-            throws UserNotFoundException {
-        Preconditions.checkNotNull(name, "name cannot be null");
-        Preconditions.checkNotNull(greeting, "greeting cannot be null");
-
-        try (var em = AppEntityManagerFactory.getInstance().createEntityManager()) {
-            User user = UserDao.findByName(em, name).map(u -> {
-                u.setGreeting(greeting);
-                return u;
-            }).orElseThrow(() -> new UserNotFoundException(String.format("with name %s", name)));
-
-            try {
-                em.getTransaction().begin();
-                UserDao.update(em, user);
-                em.getTransaction().commit();
-            } catch (Exception e) {
-                em.getTransaction().rollback();
-                throw e;
-            }
-        }
-
-    }
-
-    @Override
-    public void createUser(@Nonnull String name)
-            throws UserAlreadyExistsException, RoleNotFoundException {
-        createUser(name, DEFAULT_ROLE_NAME);
-    }
+    
 
     @Override
     public void createUser(@Nonnull String name, @Nonnull String role)

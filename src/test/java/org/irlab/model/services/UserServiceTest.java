@@ -73,37 +73,6 @@ public class UserServiceTest {
         }
     }
 
-    @Test
-    @DisplayName("Unknown users should get the default greeting")
-    void greetTest1() {
-        String message = userService.greet("GreetTest1User");
-        assertEquals("Hello, GreetTest1User!", message);
-    }
-
-    @Test
-    @DisplayName("Known user should get the personalized message")
-    void greetTest2() {
-        String message = userService.greet(KNOWN_USER);
-        assertEquals(KNOWN_USER_GREETING + ", " + KNOWN_USER + "!", message);
-    }
-
-    @Test
-    @DisplayName("Changing the greeting of an unknown user should throw an exception")
-    void setUserGreetingTest1() {
-        assertThrows(UserNotFoundException.class,
-                () -> userService.setUserGreeting("not known user", "Greetings"));
-
-    }
-
-    @Test
-    @DisplayName("Changing the greeting of a known user should change the obtained message")
-    void setUserGreetingTest2() throws UserNotFoundException {
-        userService.setUserGreeting(KNOWN_USER, "Boo");
-        String message = userService.greet(KNOWN_USER);
-        assertEquals("Boo, " + KNOWN_USER + "!", message);
-
-        // Clean up
-        userService.setUserGreeting(KNOWN_USER, KNOWN_USER_GREETING);
-    }
+    
 
 }

@@ -62,7 +62,7 @@ public class Asignatura{
 
     public String getNombre(){ return nombre;}
 
-    public void setNombre(String Nombre){ this.nombre = nombre;}
+    public void setNombre(String nombre){ this.nombre = nombre;}
 
     public Integer getNumAula(){ return numAula;}
 

@@ -36,42 +36,11 @@ import org.irlab.model.exceptions.ClaseNotFoundException;
  */
 public interface UserService {
 
-    /**
-     * Get a string greeting the user
-     *
-     * @param name the name of the user
-     * @return the greeting message
-     */
-    String greet(@Nonnull String name);
+    
 
-    /**
-     * Change the user greeting message
-     *
-     * @param name     the name of the user
-     * @param greeting the greeting message
-     */
-    void setUserGreeting(@Nonnull String name, @Nonnull String greeting)
-            throws UserNotFoundException;
-
-    /**
-     * Create user with default role and greeting
-     *
-     * @param name the name of the user
-     * @throws UserAlreadyExistsException if a user with the same name already
-     *                                    exists
-     */
-    void createUser(@Nonnull String name) throws UserAlreadyExistsException, RoleNotFoundException;
-
-    /**
-     * Create user with the given role and the default greeting message
-     *
-     * @param name the name of the user
-     * @param role the role of the user
-     * @throws UserAlreadyExistsException if a user with the same name already
-     *                                    exists
-     * @throws RoleNotFoundException      if a role with the given name cannot be
-     *                                    foundd
-     */
+   
+    
+   
     void createAlumno(@Nonnull String DNI, @NonNull String name, @Nonnull String apel1, @Nonnull String apel2, long curso, @Nonnull String grupo) 
                 throws AlumnoAlreadyExistsException, ClaseNotFoundException;
     void updateAlumno(@Nonnull String DNI, long curso, @Nonnull String grupo) 

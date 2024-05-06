@@ -47,7 +47,7 @@ import jakarta.persistence.criteria.CriteriaBuilder.In;
 public class App {
 
     private enum Command {
-        GREET_USER, CHANGE_GREETING, CREATE_USER, CREATE_ALUMNO, UPDATE_ALUMNO, REMOVE_ALUMNO, UPDATE_PROFESOR, SHOW_HORARIO, EXIT
+        CREATE_ALUMNO, UPDATE_ALUMNO, REMOVE_ALUMNO, UPDATE_PROFESOR, SHOW_HORARIO, USER, ADMIN, EXIT
     }
 
     private static final int CORRECT_SHUTDOWN = 50000;
@@ -91,16 +91,80 @@ public class App {
         }
     }
 
+    private static Command getUser() {
+        System.out.println("Choose an user:");
+        System.out.println("  1) Administrador");
+        System.out.println("  2) Profesor");
+        System.out.println("  3) Alumno");
+
+        System.out.println();
+        System.out.println("  q) Exit");
+        System.out.println();
+        while (true) {
+            System.out.print("Option: ");
+            String input = scanner.nextLine();
+            if (input.length() == 0) {
+                System.out.println("An option needs to be introduced");
+            } else if (input.length() > 1) {
+                System.err.println(input + " is not a valid option");
+            } else {
+                switch (input.charAt(0)) {
+                
+                case '1':
+                    return Command.ADMIN;
+                case '2':
+                    return Command.USER;
+                case '3':
+                    return Command.USER;
+                case 'q':
+                    return Command.EXIT;
+                default:
+                    System.out.println(input + " is not a valid option");
+                }
+            }
+        }
+    }
     private static Command getCommand() {
         System.out.println("Choose an option:");
-        System.out.println("  1) Greet user");
-        System.out.println("  2) Change user greeting");
-        System.out.println("  3) Add a new user");
-        System.out.println("  4) Add a new Alumno");
-        System.out.println("  5) Update an Alumno");
-        System.out.println("  6) Remove an Alumno");
-        System.out.println("  7) Update a Profesor");
-        System.out.println("  8) Show horario");
+        System.out.println("  1) Add a new Alumno");
+        System.out.println("  2) Update an Alumno");
+        System.out.println("  3) Remove an Alumno");
+        System.out.println("  4) Update a Profesor");
+
+
+        System.out.println();
+        System.out.println("  q) Exit");
+        System.out.println();
+        while (true) {
+            System.out.print("Option: ");
+            String input = scanner.nextLine();
+            if (input.length() == 0) {
+                System.out.println("An option needs to be introduced");
+            } else if (input.length() > 1) {
+                System.err.println(input + " is not a valid option");
+            } else {
+                switch (input.charAt(0)) {
+                
+                case '1':
+                    return Command.CREATE_ALUMNO;
+                case '2':
+                    return Command.UPDATE_ALUMNO;
+                case '3':
+                    return Command.REMOVE_ALUMNO;
+                case '4':
+                    return Command.UPDATE_PROFESOR;
+                case 'q':
+                    return Command.EXIT;
+                default:
+                    System.out.println(input + " is not a valid option");
+                }
+            }
+        }
+    }
+
+    private static Command getCommandUser() {
+        System.out.println("Choose an option:");
+        System.out.println("  1) Show horario");
 
 
 
@@ -116,21 +180,8 @@ public class App {
                 System.err.println(input + " is not a valid option");
             } else {
                 switch (input.charAt(0)) {
+    
                 case '1':
-                    return Command.GREET_USER;
-                case '2':
-                    return Command.CHANGE_GREETING;
-                case '3':
-                    return Command.CREATE_USER;
-                case '4':
-                    return Command.CREATE_ALUMNO;
-                case '5':
-                    return Command.UPDATE_ALUMNO;
-                case '6':
-                    return Command.REMOVE_ALUMNO;
-                case '7':
-                    return Command.UPDATE_PROFESOR;
-                case '8':
                     return Command.SHOW_HORARIO;
                 case 'q':
                     return Command.EXIT;
@@ -155,47 +206,6 @@ public class App {
         return result;
     }
 
-    private static void greetUser() {
-        String userName = readInput("User name: ", "You must supply a user name");
-        String greetingMessage = userService.greet(userName);
-        System.out.println(greetingMessage);
-    }
-
-    private static void changeGreeting() {
-        String userName = readInput("User name: ", "You must supply a user name");
-        String newGreeting = readInput("Greeting message: ",
-                "You must supply a new greeting message");
-        try {
-            userService.setUserGreeting(userName, newGreeting);
-            System.out.println("User greeting changed");
-        } catch (UserNotFoundException e) {
-            System.out.println(
-                    String.format("Greeting could not be changed, due to the following error:\n%s",
-                            e.getMessage()));
-        }
-
-    }
-
-    private static @Nonnull String askForRole() {
-        String roleList = roleService.getAvailableRoleNames().stream()
-                .map(name -> "  - " + name + "\n").collect(Collectors.joining(""));
-        String prompt = "Select a role for the user. Avalable roles are:\n" + roleList
-                + "User role: ";
-        return readInput(prompt, "You must supply a role name");
-    }
-
-    private static void createUser() {
-        String userName = readInput("User name: ", "You must supply a user name");
-        String roleName = askForRole();
-        try {
-            userService.createUser(userName, roleName);
-            System.out.println("User created");
-        } catch (UserAlreadyExistsException e) {
-            System.out.println("User not created: a user with that name already exists.");
-        } catch (RoleNotFoundException e) {
-            System.out.println("User not created: invalid role");
-        }
-    }
     private static void createAlumno() {
         String AlDni = readInput("Alumno's DNI: ", "You must supply an alumno's DNI");
         String AlName = readInput("Alumno's name: ", "You must supply an alumno's name");
@@ -293,19 +303,27 @@ public class App {
         scanner = new Scanner(System.in);
         while (!exit) {
             System.out.println();
+            Command user = getUser();
+            if (user ==  Command.ADMIN ){
             Command command = getCommand();
             switch (command) {
-     
-                case GREET_USER -> greetUser();
-            case CHANGE_GREETING -> changeGreeting();
-            case CREATE_USER -> createUser();
-            case CREATE_ALUMNO -> createAlumno();
-            case UPDATE_ALUMNO -> updateAlumno();
-            case REMOVE_ALUMNO -> removeAlumno();
-            case UPDATE_PROFESOR ->updateProfesor();
-            case SHOW_HORARIO -> showHorario();
-            case EXIT -> exit = true;
+                case CREATE_ALUMNO -> createAlumno();
+                case UPDATE_ALUMNO -> updateAlumno();
+                case REMOVE_ALUMNO -> removeAlumno();
+                case UPDATE_PROFESOR ->updateProfesor();
+                case EXIT -> exit = true;
+                default -> throw new IllegalArgumentException("Unexpected value: " + command);
             }
+        }
+            else {
+                Command command = getCommandUser();
+                switch (command){
+                    case SHOW_HORARIO -> showHorario();
+                    case EXIT -> exit = true;
+                    default -> throw new IllegalArgumentException("Unexpected value: " + command);
+                }
+            }
+        
         }
 
         shutdown();
